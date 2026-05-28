@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบจัดการหลังบ้าน (Admin) </title>
+    <title>ระบบจัดการหลังบ้าน (Admin)</title>
     <link rel="icon" href="img/logo1.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -118,14 +118,23 @@
         .badge.parent { background: #fce7f3; color: #db2777; }
         .badge.teacher { background: #dcfce7; color: #16a34a; }
         .badge.other { background: #f3f4f6; color: #4b5563; }
+        
+        .btn-view { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: 0.3s; }
+        .btn-view:hover { background: #373b98; }
 
         /* --- ข้อเสนอแนะ (Suggestions) --- */
+        .filter-container { background: var(--white); padding: 15px 25px; border-radius: 12px; box-shadow: var(--card-shadow); margin-bottom: 25px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .filter-container label { font-weight: 600; color: var(--primary); }
+        .select-filter { padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd; outline: none; font-family: 'Kanit'; font-size: 1rem; color: var(--text-main); min-width: 300px; cursor: pointer; transition: 0.3s; }
+        .select-filter:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(78,84,200,0.2); }
+
         .feedback-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .feedback-card { background: var(--white); padding: 25px; border-radius: 12px; box-shadow: var(--card-shadow); border-left: 5px solid var(--secondary); transition: 0.3s; display: flex; flex-direction: column;}
         .feedback-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
         .feedback-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
         .feedback-meta { font-size: 0.85rem; color: var(--text-light); }
         .feedback-meta strong { color: var(--text-main); display: block; font-size: 1.05rem; margin-bottom: 3px; }
+        .feedback-tag { display: inline-block; background: #eef2ff; color: var(--primary); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; margin-top: 5px; border: 1px solid #dbeafe; }
         .feedback-icon { color: var(--secondary); font-size: 1.5rem; opacity: 0.3; }
         .feedback-content { font-size: 1rem; color: var(--text-main); line-height: 1.6; font-style: italic; flex-grow: 1;}
         .feedback-content::before, .feedback-content::after { content: '"'; font-size: 1.5rem; color: var(--primary); font-family: serif; }
@@ -133,11 +142,31 @@
         /* --- Loading State --- */
         .loading-container { text-align: center; padding: 50px; color: var(--primary); font-size: 1.2rem; }
         
+        /* --- Modal --- */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px); animation: fadeIn 0.3s ease; }
+        .modal-content { background: var(--bg-color); margin: 5% auto; width: 90%; max-width: 800px; border-radius: 15px; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+        .modal-header { padding: 20px 25px; background: var(--white); border-radius: 15px 15px 0 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { color: var(--primary); margin: 0; font-size: 1.3rem; }
+        .close-modal { font-size: 2rem; cursor: pointer; color: var(--text-light); transition: 0.3s; padding: 0 10px; display: flex; align-items: center; justify-content: center; z-index: 2001; }
+        .close-modal:hover { color: #e74c3c; transform: scale(1.2); }
+        .modal-body { padding: 25px; overflow-y: auto; flex-grow: 1; }
+        
+        .modal-info-card { background: var(--white); padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .modal-info-card div { font-size: 0.95rem; }
+        .section-block { background: var(--white); padding: 20px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .section-block h4 { color: var(--text-main); margin-bottom: 15px; border-bottom: 2px solid var(--secondary); padding-bottom: 8px; display: inline-block; }
+        .score-row { display: flex; align-items: flex-start; padding: 10px 0; border-bottom: 1px dashed #eee; }
+        .score-row:last-child { border-bottom: none; }
+        .score-num { background: #e0f2fe; color: #0284c7; font-weight: 700; width: 35px; height: 35px; display: flex; justify-content: center; align-items: center; border-radius: 8px; margin-right: 15px; flex-shrink: 0; }
+        .score-text { flex-grow: 1; }
+        .score-text .q-title { font-weight: 500; font-size: 0.95rem; margin-bottom: 5px; }
+        .score-text .q-comment { font-size: 0.9rem; color: #666; font-style: italic; background: #f9f9f9; padding: 8px 12px; border-radius: 6px; border-left: 3px solid var(--primary); display: inline-block; margin-top: 5px; }
+
         /* --- ระบบ Print (A4) --- */
         #printable-header { display: none; text-align: center; margin-bottom: 30px; }
         @media print {
             body { background: white; margin: 0; }
-            .sidebar, .topbar, .search-container, .loading-container { display: none !important; }
+            .sidebar, .topbar, .search-container, .loading-container, .btn-view, .filter-container { display: none !important; }
             .main-content { margin-left: 0; padding: 0; }
             #printable-header { display: block; border-bottom: 2px solid #333; padding-bottom: 20px; }
             #printable-header h1 { font-size: 24px; color: #000; margin-bottom: 5px; }
@@ -152,23 +181,23 @@
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
         @media (max-width: 992px) { .content-grid { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); transition: 0.3s; } .main-content { margin-left: 0; padding: 15px; } .summary-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); transition: 0.3s; } .main-content { margin-left: 0; padding: 15px; } .summary-grid { grid-template-columns: 1fr 1fr; } .modal-info-card { grid-template-columns: 1fr; } .filter-container select { width: 100%; min-width: unset;} }
     </style>
 </head>
 <body>
 
     <div id="login-page">
         <div class="login-box">
-            <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+            <img src="img/logo1.png" alt="Logo" onerror="this.style.display='none'">
             <h2>Admin Dashboard</h2>
             <form id="loginForm">
                 <div class="input-group">
                     <label for="username">ชื่อผู้ใช้งาน</label>
-                    <input type="text" id="username" placeholder="user" required>
+                    <input type="text" id="username" placeholder="Username" required>
                 </div>
                 <div class="input-group">
                     <label for="password">รหัสผ่าน</label>
-                    <input type="password" id="password" placeholder="pass" required>
+                    <input type="password" id="password" placeholder="Password" required>
                 </div>
                 <button type="submit" class="btn-login">เข้าสู่ระบบ <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
                 <p id="login-error"><i class="fa-solid fa-circle-exclamation"></i> Username หรือ Password ไม่ถูกต้อง</p>
@@ -181,13 +210,14 @@
             
             <aside class="sidebar">
                 <div class="sidebar-brand animated delay-1">
-                    <img src="img/logo1.png" alt="Logo" onerror="this.style.display='none'">
-                    <h3>ระบบจัดการหลังบ้าน (Admin)</h3>
+                    <img src="img/logo.png" alt="Logo" onerror="this.style.display='none'">
+                    
+                    <h3>ระบบจัดการหลังบ้าน</h3>
                 </div>
                 <ul class="sidebar-menu animated delay-2">
                     <li><a id="nav-overview" class="menu-btn active" onclick="switchTab('overview')"><i class="fa-solid fa-chart-line"></i> ภาพรวม (Overview)</a></li>
-                    <li><a id="nav-respondents" class="menu-btn" onclick="switchTab('respondents')"><i class="fa-solid fa-users"></i> ข้อมูลผู้ตอบค้นหาได้</a></li>
-                    <li><a id="nav-suggestions" class="menu-btn" onclick="switchTab('suggestions')"><i class="fa-solid fa-comments"></i> ข้อเสนอแนะจากระบบ</a></li>
+                    <li><a id="nav-respondents" class="menu-btn" onclick="switchTab('respondents')"><i class="fa-solid fa-users"></i> ข้อมูลผู้ตอบทั้งหมด</a></li>
+                    <li><a id="nav-suggestions" class="menu-btn" onclick="switchTab('suggestions')"><i class="fa-solid fa-comments"></i> ข้อเสนอแนะรวม</a></li>
                 </ul>
             </aside>
 
@@ -252,7 +282,7 @@
 
                 <div id="view-respondents" class="view-section content-box">
                     <div class="data-header">
-                        <h3><i class="fa-solid fa-table-list"></i> ข้อมูลผู้ตอบทั้งหมด </h3>
+                        <h3><i class="fa-solid fa-table-list"></i> ข้อมูลผู้ตอบรายบุคคล</h3>
                         <div class="search-container">
                             <i class="fa-solid fa-magnifying-glass"></i>
                             <input type="text" id="searchInput" class="search-bar" placeholder="ค้นหาสถานะ, เพศ, หรืออื่นๆ...">
@@ -266,35 +296,83 @@
                                     <th>สถานะ</th>
                                     <th>รายละเอียดเพิ่มเติม</th>
                                     <th>เพศ</th>
-                                    <th>คะแนนเฉลี่ย (เต็ม 5)</th>
+                                    <th>คะแนนเฉลี่ย</th>
+                                    <th style="text-align: center;">จัดการ</th>
                                 </tr>
                             </thead>
-                            <tbody id="respondents-tbody">
-                                </tbody>
+                            <tbody id="respondents-tbody"></tbody>
                         </table>
                     </div>
                 </div>
 
                 <div id="view-suggestions" class="view-section">
-                    <h3 style="margin-bottom: 20px; color: var(--text-main);"><i class="fa-solid fa-comment-dots" style="color: var(--primary);"></i> ข้อเสนอแนะจากระบบ </h3>
+                    
+                    <div class="filter-container">
+                        <label for="suggestionFilter"><i class="fa-solid fa-filter"></i> ตัวกรองข้อเสนอแนะ:</label>
+                        <select id="suggestionFilter" class="select-filter" onchange="filterSuggestions()">
+                        </select>
+                    </div>
+
                     <div class="feedback-grid" id="suggestions-grid">
-                        </div>
+                    </div>
                 </div>
 
             </main>
         </div>
     </div>
 
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-file-invoice"></i> ข้อมูลการประเมินฉบับเต็ม</h3>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
     <script>
         // 🛑 นำ URL ของ Google Apps Script มาใส่ตรงนี้ครับ 🛑
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyi68ymvz6_3TDgRJ1enuwT0daM1YdbK2lDw0oGo1xE7TWYxq_ZLAcV0YO53YCzPix0/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbye9E8HNsmgX5EMbfuyVtymx783UGUktQxKpY9XmN84UmmCOJ52gAwuYOdHBswBQULE/exec';
         
-        let allData = []; // เก็บข้อมูลที่ดึงมาทั้งหมดเพื่อใช้ทำ Search
+        let allData = []; // เก็บข้อมูลที่ดึงมาทั้งหมด
 
-        // พจนานุกรมแปลภาษาจาก ค่าในฟอร์ม -> ภาษาไทย
         const statusMap = { 'parent': 'ผู้ปกครอง', 'student': 'นักเรียน', 'teacher': 'ครู/บุคลากรทางการศึกษา', 'committee': 'คณะกรรมการสถานศึกษา', 'other': 'อื่นๆ' };
         const genderMap = { 'male': 'ชาย', 'female': 'หญิง', 'not_specified': 'ไม่ระบุ' };
         const badgeClass = { 'parent': 'parent', 'student': 'student', 'teacher': 'teacher', 'committee': 'teacher', 'other': 'other' };
+
+        // ชื่อด้านและข้อย่อย เพื่อนำไปแสดงใน Filter และ Modal
+        const sectionTitles = [
+            "1. ด้านการบริหารจัดการสถานศึกษา", "2. ด้านการจัดการเรียนรู้", "3. ด้านคุณภาพผู้เรียน",
+            "4. ด้านอาคารสถานที่และสิ่งแวดล้อม", "5. ด้านระบบดูแลช่วยเหลือนักเรียน", "6. ด้านความสัมพันธ์กับผู้ปกครองและชุมชน"
+        ];
+
+        // ชื่อข้อย่อย 30 ข้อ เพื่อแสดงใน Filter
+        const subQuestionLabels = [
+            "1.1 บริหารงานอย่างเป็นระบบ ชัดเจน", "1.2 วางแผนและกำหนดเป้าหมาย", "1.3 ประชาสัมพันธ์ข่าวสารอย่างทั่วถึง", "1.4 เปิดโอกาสให้มีส่วนร่วม", "1.5 ให้บริการด้วยความสะดวกรวดเร็ว",
+            "2.1 เรียนรู้อย่างเต็มศักยภาพ", "2.2 ใช้สื่อเทคโนโลยีในการจัดการเรียนรู้", "2.3 เน้นคิดวิเคราะห์และปฏิบัติจริง", "2.4 สอดคล้องกับการนำไปใช้จริง", "2.5 วัดผลยุติธรรมและโปร่งใส",
+            "3.1 ผลสัมฤทธิ์ตามมาตรฐาน", "3.2 มีคุณธรรมและระเบียบวินัย", "3.3 รับผิดชอบต่อตนเองและสังคม", "3.4 ทักษะคิดวิเคราะห์แก้ปัญหา", "3.5 ทำงานร่วมกับผู้อื่นได้เหมาะสม",
+            "4.1 อาคารสะอาดเป็นระเบียบปลอดภัย", "4.2 สภาพแวดล้อมเอื้อต่อการเรียนรู้", "4.3 สื่อแหล่งเรียนรู้เพียงพอ", "4.4 ร่มรื่นสวยงามและน่าอยู่", "4.5 ระบบสาธารณูปโภคพร้อมใช้งาน",
+            "5.1 มาตรการดูแลความปลอดภัย", "5.2 ระบบให้คำปรึกษาและช่วยเหลือ", "5.3 ส่งเสริมสุขภาพและคุณธรรม", "5.4 รับฟังปัญหาความต้องการ", "5.5 ติดตามช่วยเหลือนักเรียนรายบุคคล",
+            "6.1 สื่อสารกับผู้ปกครองสม่ำเสมอ", "6.2 เปิดโอกาสให้เข้ามามีส่วนร่วม", "6.3 สร้างความสัมพันธ์อันดี", "6.4 จัดกิจกรรมเป็นประโยชน์ต่อชุมชน", "6.5 รับฟังข้อเสนอแนะเพื่อนำไปพัฒนา"
+        ];
+
+        // --- เริ่มต้นโหลดตัวเลือก Filter ---
+        function initFilterDropdown() {
+            const select = document.getElementById('suggestionFilter');
+            let optionsHtml = `
+                <option value="all" selected>🌟 ดูทั้งหมด (ทุกข้อรวมกัน)</option>
+                <option value="overall">📌 เฉพาะข้อเสนอแนะในภาพรวม</option>
+                <optgroup label="แยกตามรายข้อย่อย">
+            `;
+            
+            subQuestionLabels.forEach((label, index) => {
+                optionsHtml += `<option value="q_${index}">ข้อ ${label}</option>`;
+            });
+            optionsHtml += `</optgroup>`;
+            select.innerHTML = optionsHtml;
+        }
+        initFilterDropdown(); // รันสร้างเมนูทันที
 
         // --- ระบบ Login ---
         document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -310,9 +388,8 @@
                 setTimeout(() => {
                     document.getElementById('login-page').style.display = 'none';
                     document.getElementById('dashboard-page').style.display = 'block';
-                    
-                    initDashboard(); // เซ็ตวันที่
-                    fetchGoogleSheetData(); // เริ่มดึงข้อมูล!
+                    initDashboard();
+                    fetchGoogleSheetData();
                 }, 500);
             } else {
                 document.getElementById('login-error').style.display = 'block';
@@ -326,11 +403,9 @@
             document.getElementById('password').value = '';
         }
 
-        // --- ระบบสลับ Tab ---
         function switchTab(tabId) {
             document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active'));
             document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-            
             document.getElementById('view-' + tabId).classList.add('active');
             document.getElementById('nav-' + tabId).classList.add('active');
             
@@ -340,182 +415,258 @@
             if(tabId === 'suggestions') pageTitle.innerHTML = '<i class="fa-solid fa-comments"></i> ข้อเสนอแนะทั้งหมด';
         }
 
-        // --- ตั้งค่าวันที่ ---
         function initDashboard() {
             const dateStr = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
             document.getElementById('current-date').textContent = dateStr;
             document.getElementById('print-date').textContent = dateStr;
         }
 
-        // ==========================================
-        // ฟังก์ชันหัวใจหลัก: ดึงข้อมูลจาก Google Sheets
-        // ==========================================
+        // --- ดึงข้อมูล ---
         async function fetchGoogleSheetData() {
             const tbody = document.getElementById('respondents-tbody');
             const grid = document.getElementById('suggestions-grid');
             
-            // แสดงสถานะกำลังโหลด
-            tbody.innerHTML = '<tr><td colspan="5"><div class="loading-container"><i class="fa-solid fa-spinner fa-spin"></i> กำลังดึงข้อมูลจาก Google Sheets...</div></td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6"><div class="loading-container"><i class="fa-solid fa-spinner fa-spin"></i> กำลังดึงข้อมูล...</div></td></tr>';
             grid.innerHTML = '<div class="loading-container" style="grid-column: 1 / -1;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลดข้อเสนอแนะ...</div>';
 
             try {
                 const response = await fetch(scriptURL);
-                allData = await response.json(); // แปลงเป็น JSON
+                allData = (await response.json()).map((row, index) => ({...row, originalIndex: index})); 
 
-                // เมื่อโหลดสำเร็จ ให้เอาไปแสดงผลทั้ง 3 หน้า
                 renderTable(allData); 
-                renderSuggestions(allData);
+                renderSuggestions(allData, 'all'); 
                 calculateDashboardStats(allData); 
 
             } catch (error) {
                 console.error("Error fetching data:", error);
-                tbody.innerHTML = '<tr><td colspan="5" style="color:red; text-align:center;">เกิดข้อผิดพลาดในการโหลดข้อมูล โปรดตรวจสอบ URL ของ Apps Script</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="color:red; text-align:center;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
                 grid.innerHTML = '<div style="color:red; grid-column: 1 / -1;">เกิดข้อผิดพลาดในการโหลดข้อเสนอแนะ</div>';
             }
         }
 
-        // --- Render ตารางผู้ตอบ และคำนวณคะแนนเฉลี่ยแต่ละคน ---
+        // --- ตาราง ---
         function renderTable(dataArray) {
             const tbody = document.getElementById('respondents-tbody');
             tbody.innerHTML = '';
             
             if(dataArray.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 30px;">ไม่พบข้อมูล</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 30px;">ไม่พบข้อมูลที่ตรงกับคำค้นหา</td></tr>'; 
                 return;
             }
 
-            dataArray.forEach(row => {
-                // คำนวณคะแนนเฉลี่ยของคนนี้ (30 ข้อ)
+            [...dataArray].reverse().forEach(row => {
                 let sum = 0, count = 0;
-                row.scores.forEach(score => { if(score) { sum += Number(score); count++; } });
+                if(row.scores) { row.scores.forEach(score => { if(score) { sum += Number(score); count++; } }); }
                 let personalAvg = count > 0 ? (sum/count).toFixed(2) : '-';
 
-                // จัดรูปแบบวันที่และข้อความ
                 let dateObj = new Date(row.timestamp);
                 let dateFormatted = isNaN(dateObj) ? row.timestamp : dateObj.toLocaleDateString('th-TH') + ' ' + dateObj.toLocaleTimeString('th-TH').substring(0,5) + ' น.';
-                
                 let thStatus = statusMap[row.status] || row.status;
                 let thGender = genderMap[row.gender] || row.gender;
                 let classType = badgeClass[row.status] || 'other';
 
-                let tr = `<tr>
+                tbody.innerHTML += `<tr>
                     <td>${dateFormatted}</td>
                     <td><span class="badge ${classType}">${thStatus}</span></td>
                     <td>${row.additional || '-'}</td>
                     <td>${thGender}</td>
                     <td style="color: var(--primary); font-weight: 600;">${personalAvg}</td>
+                    <td style="text-align: center;"><button class="btn-view" onclick="openDetails(${row.originalIndex})"><i class="fa-solid fa-eye"></i> ดูข้อมูล</button></td>
                 </tr>`;
-                tbody.innerHTML += tr;
             });
         }
 
-        // --- ฟังก์ชันค้นหาในตาราง (Search) ---
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const keyword = e.target.value.toLowerCase();
-            // กรองข้อมูลจาก allData
-            const filteredData = allData.filter(row => {
-                const thStatus = (statusMap[row.status] || row.status).toLowerCase();
-                const thGender = (genderMap[row.gender] || row.gender).toLowerCase();
-                const additional = (row.additional || '').toLowerCase();
-                
-                return thStatus.includes(keyword) || thGender.includes(keyword) || additional.includes(keyword);
-            });
-            renderTable(filteredData); // เรียกวาดตารางใหม่ด้วยข้อมูลที่ถูกกรอง
-        });
+        // --- ระบบค้นหาข้อมูล (อัปเดตใหม่ แก้ปัญหาเว้นวรรค) ---
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    // ดึงคำค้นหา แปลงเป็นพิมพ์เล็ก และตัดช่องว่างหัว-ท้ายออก
+    const keyword = e.target.value.toLowerCase().trim();
+    
+    // ถ้าไม่ได้พิมพ์อะไรเลย ให้แสดงข้อมูลทั้งหมด
+    if (keyword === "") {
+        renderTable(allData);
+        return;
+    }
+    
+    const filteredData = allData.filter(row => {
+        // 1. ดึงข้อมูลดิบจาก Sheet แปลงเป็นตัวอักษรและตัดช่องว่างออก ป้องกันบั๊ก
+        const rawStatus = String(row.status || '').trim();
+        const rawGender = String(row.gender || '').trim();
+        const additional = String(row.additional || '').toLowerCase();
+        
+        // 2. ดึงค่าภาษาไทยจาก Map (ถ้าไม่มีให้ใช้ค่าดิบแทน)
+        const thStatus = String(statusMap[rawStatus] || rawStatus).toLowerCase();
+        const thGender = String(genderMap[rawGender] || rawGender).toLowerCase();
+        
+        // 3. ตรวจสอบว่าคำที่ค้นหา ตรงกับข้อมูลส่วนไหนบ้าง
+        return thStatus.includes(keyword) || 
+               thGender.includes(keyword) || 
+               additional.includes(keyword) ||
+               rawStatus.toLowerCase().includes(keyword);
+    });
 
-        // --- Render การ์ดข้อเสนอแนะ ---
-        function renderSuggestions(dataArray) {
+    renderTable(filteredData);
+});
+
+        // --- ระบบ ป๊อปอัป (Modal) ดูรายละเอียดคะแนนรายข้อ ---
+        function openDetails(index) {
+            const row = allData[index];
+            if(!row) return;
+
+            let dateObj = new Date(row.timestamp);
+            let dateFormatted = isNaN(dateObj) ? row.timestamp : dateObj.toLocaleDateString('th-TH') + ' ' + dateObj.toLocaleTimeString('th-TH').substring(0,5) + ' น.';
+            let thStatus = statusMap[row.status] || row.status;
+            let thGender = genderMap[row.gender] || row.gender;
+
+            let html = `
+                <div class="modal-info-card">
+                    <div><strong>สถานะ:</strong> ${thStatus} ${row.additional ? `(${row.additional})` : ''}</div>
+                    <div><strong>เพศ:</strong> ${thGender}</div>
+                    <div style="grid-column: 1 / -1; color: var(--text-light); font-size: 0.85rem;"><i class="fa-regular fa-clock"></i> วันที่ทำประเมิน: ${dateFormatted}</div>
+                </div>
+            `;
+
+            // ลูปสร้างเนื้อหา 6 ด้าน
+            for (let i = 0; i < 6; i++) {
+                html += `<div class="section-block"><h4>${sectionTitles[i]}</h4>`;
+                
+                for (let j = 0; j < 5; j++) {
+                    let qIndex = (i * 5) + j;
+                    let score = row.scores[qIndex] || '-';
+                    // ดึงชื่อหัวข้อเต็มจาก subQuestionLabels ที่เราตั้งค่าไว้ตอนต้น
+                    let title = subQuestionLabels[qIndex] || `ข้อ ${i+1}.${j+1}`;
+                    let comment = row.subComments && row.subComments[qIndex] ? row.subComments[qIndex] : '';
+
+                    html += `
+                        <div class="score-row">
+                            <div class="score-num">${score}</div>
+                            <div class="score-text">
+                                <div class="q-title" style="color: var(--primary); font-weight: 600;">${title}</div>
+                                ${comment ? `<div class="q-comment"><i class="fa-solid fa-comment-dots" style="color:var(--primary);"></i> ${comment}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+                html += `</div>`;
+            }
+
+            // ถ้ามีข้อเสนอแนะรวมตอนท้าย
+            if (row.suggestion) {
+                html += `
+                    <div class="section-block" style="border: 1px solid var(--secondary);">
+                        <h4 style="color: var(--secondary); border-color: var(--secondary);">ข้อเสนอแนะในภาพรวม</h4>
+                        <div style="font-style: italic; color: #444;">"${row.suggestion}"</div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('modal-body').innerHTML = html;
+            document.getElementById('detailModal').style.display = 'block';
+        }
+
+        // ฟังก์ชันสำหรับปิด Modal
+        function closeModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        // ปิด Modal เมื่อคลิกพื้นที่ด้านนอก
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // --- ระบบ Filter การ์ดข้อเสนอแนะ ---
+        function filterSuggestions() {
+            const filterValue = document.getElementById('suggestionFilter').value;
+            renderSuggestions(allData, filterValue);
+        }
+
+        // --- วาดการ์ดข้อเสนอแนะตามเงื่อนไข (Filter) ---
+        function renderSuggestions(dataArray, filterType) {
             const grid = document.getElementById('suggestions-grid');
             grid.innerHTML = '';
-
             let hasSuggestions = false;
-            // ลูปจากล่าสุดมาเก่า (Reverse)
-            [...dataArray].reverse().forEach(row => {
-                if(row.suggestion && row.suggestion.trim() !== "") {
-                    hasSuggestions = true;
-                    let dateObj = new Date(row.timestamp);
-                    let dateFormatted = isNaN(dateObj) ? '-' : dateObj.toLocaleDateString('th-TH');
-                    let thStatus = statusMap[row.status] || row.status;
 
-                    let html = `
-                    <div class="feedback-card animated delay-1">
-                        <div class="feedback-header">
-                            <div class="feedback-meta">
-                                <strong>${thStatus} ${row.additional ? `(${row.additional})` : ''}</strong>
-                                ${dateFormatted}
-                            </div>
-                            <i class="fa-solid fa-quote-right feedback-icon"></i>
+            const createCard = (status, additional, dateStr, title, content) => {
+                hasSuggestions = true;
+                return `
+                <div class="feedback-card animated delay-1">
+                    <div class="feedback-header">
+                        <div class="feedback-meta">
+                            <strong>${status} ${additional ? `(${additional})` : ''}</strong>
+                            ${dateStr}
+                            <div class="feedback-tag"><i class="fa-solid fa-tag"></i> ${title}</div>
                         </div>
-                        <div class="feedback-content">${row.suggestion}</div>
-                    </div>`;
-                    grid.innerHTML += html;
+                        <i class="fa-solid fa-quote-right feedback-icon"></i>
+                    </div>
+                    <div class="feedback-content">${content}</div>
+                </div>`;
+            };
+
+            [...dataArray].reverse().forEach(row => {
+                let dateObj = new Date(row.timestamp);
+                let dateFormatted = isNaN(dateObj) ? '-' : dateObj.toLocaleDateString('th-TH');
+                let thStatus = statusMap[row.status] || row.status;
+
+                // 1. ถ้าต้องการดูภาพรวม หรือ ดูทั้งหมด (เติม String() เพื่อป้องกัน Error)
+                if (row.suggestion && String(row.suggestion).trim() !== "" && (filterType === 'all' || filterType === 'overall')) {
+                    grid.innerHTML += createCard(thStatus, row.additional, dateFormatted, "ข้อเสนอแนะภาพรวม", row.suggestion);
+                }
+
+                // 2. ถ้าต้องการดูข้อย่อย (q_0 ถึง q_29) หรือ ดูทั้งหมด
+                if (row.subComments && (filterType === 'all' || filterType.startsWith('q_'))) {
+                    row.subComments.forEach((comment, index) => {
+                        // เติม String() เพื่อป้องกัน Error ในกรณีที่พิมพ์มาแค่ตัวเลข
+                        if (comment && String(comment).trim() !== "") {
+                            // ตรวจสอบว่าตรงกับข้อที่เลือกไหม หรือดูทั้งหมด
+                            if (filterType === 'all' || filterType === `q_${index}`) {
+                                let labelTitle = `ข้อ ${Math.floor(index/5) + 1}.${(index%5) + 1} ${subQuestionLabels[index]}`;
+                                grid.innerHTML += createCard(thStatus, row.additional, dateFormatted, labelTitle, comment);
+                            }
+                        }
+                    });
                 }
             });
 
             if(!hasSuggestions) {
-                grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #777; padding: 40px;">ยังไม่มีข้อเสนอแนะในระบบครับ</div>';
+                grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #777; padding: 40px; background: white; border-radius: 12px;">ไม่พบข้อเสนอแนะในหมวดหมู่นี้ครับ</div>';
             }
         }
 
-        // --- นำข้อมูลจริงมาคำนวณแดชบอร์ดหน้าแรก (Bonus) ---
+        // --- Dashboard Stats ---
         function calculateDashboardStats(dataArray) {
             if(dataArray.length === 0) return;
-
-            // 1. อัปเดตยอดคน
             document.getElementById('stat-total').innerText = dataArray.length;
-
-            // 2. คำนวณคะแนนเฉลี่ยรวมทุกข้อ ทุกคน
-            let totalScore = 0, totalQuestions = 0;
-            let sectionScores = [0,0,0,0,0,0]; // เก็บผลรวม 6 ด้าน
-            let sectionCounts = [0,0,0,0,0,0]; // นับจำนวนข้อที่มีคนตอบ 6 ด้าน
-            
-            // นับสัดส่วนสถานะ
-            let statusCounts = {};
+            let totalScore = 0, totalQuestions = 0; let sectionScores = [0,0,0,0,0,0]; let sectionCounts = [0,0,0,0,0,0]; let statusCounts = {};
 
             dataArray.forEach(row => {
-                // รวมสัดส่วน
                 statusCounts[row.status] = (statusCounts[row.status] || 0) + 1;
-
-                // รวมคะแนน
-                row.scores.forEach((score, index) => {
-                    if(score) {
-                        let num = Number(score);
-                        totalScore += num;
-                        totalQuestions++;
-                        
-                        // แยก 6 ด้าน (ด้านละ 5 ข้อ)
-                        let sectionIndex = Math.floor(index / 5);
-                        if(sectionIndex < 6) {
-                            sectionScores[sectionIndex] += num;
-                            sectionCounts[sectionIndex]++;
+                if(row.scores) {
+                    row.scores.forEach((score, index) => {
+                        if(score) {
+                            let num = Number(score); totalScore += num; totalQuestions++;
+                            let sectionIndex = Math.floor(index / 5);
+                            if(sectionIndex < 6) { sectionScores[sectionIndex] += num; sectionCounts[sectionIndex]++; }
                         }
-                    }
-                });
+                    });
+                }
             });
 
-            // อัปเดตเฉลี่ยรวม
             let grandAvg = totalQuestions > 0 ? (totalScore / totalQuestions) : 0;
             document.getElementById('stat-avg').innerText = grandAvg.toFixed(2);
             
-            // วิเคราะห์ระดับ (เกณฑ์ 5 ระดับ)
             let levelText = "-";
-            if(grandAvg >= 4.5) levelText = "มากที่สุด";
-            else if(grandAvg >= 3.5) levelText = "มาก";
-            else if(grandAvg >= 2.5) levelText = "ปานกลาง";
-            else if(grandAvg >= 1.5) levelText = "น้อย";
-            else if(grandAvg > 0) levelText = "น้อยที่สุด";
+            if(grandAvg >= 4.5) levelText = "มากที่สุด"; else if(grandAvg >= 3.5) levelText = "มาก"; else if(grandAvg >= 2.5) levelText = "ปานกลาง"; else if(grandAvg >= 1.5) levelText = "น้อย"; else if(grandAvg > 0) levelText = "น้อยที่สุด";
             document.getElementById('stat-level').innerText = levelText;
 
-            // 3. อัปเดตตารางสัดส่วนเปอร์เซ็นต์
-            const statTbody = document.getElementById('stat-table-body');
-            statTbody.innerHTML = '';
+            const statTbody = document.getElementById('stat-table-body'); statTbody.innerHTML = '';
             for (const [key, val] of Object.entries(statusCounts)) {
                 let percent = ((val / dataArray.length) * 100).toFixed(1) + '%';
                 let thName = statusMap[key] || key;
                 statTbody.innerHTML += `<tr><td>${thName}</td><td style="text-align: center;">${percent}</td></tr>`;
             }
 
-            // 4. วาดกราฟใหม่
             let sectionAverages = sectionScores.map((sum, i) => sectionCounts[i] > 0 ? (sum / sectionCounts[i]).toFixed(2) : 0);
             updateChart(sectionAverages);
         }
@@ -523,22 +674,14 @@
         function updateChart(chartData) {
             const ctx = document.getElementById('barChart').getContext('2d');
             if(window.myChart != undefined) { window.myChart.destroy(); } 
-            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, '#4e54c8'); gradient.addColorStop(1, '#8f94fb');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400); gradient.addColorStop(0, '#4e54c8'); gradient.addColorStop(1, '#8f94fb');
 
             window.myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['1. บริหารจัดการ', '2. จัดการเรียนรู้', '3. คุณภาพผู้เรียน', '4. อาคารสถานที่', '5. ดูแลนักเรียน', '6. ความสัมพันธ์ชุมชน'],
-                    datasets: [{ label: 'คะแนนเฉลี่ย', data: chartData, backgroundColor: gradient, borderRadius: 8 }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: { y: { beginAtZero: true, max: 5 } },
-                    plugins: { legend: { display: false } }
-                }
+                type: 'bar', data: { labels: ['1. บริหารจัดการ', '2. จัดการเรียนรู้', '3. คุณภาพผู้เรียน', '4. อาคารสถานที่', '5. ดูแลนักเรียน', '6. ความสัมพันธ์ชุมชน'], datasets: [{ label: 'คะแนนเฉลี่ย', data: chartData, backgroundColor: gradient, borderRadius: 8 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 5 } }, plugins: { legend: { display: false } } }
             });
         }
+        
     </script>
 </body>
 </html>
