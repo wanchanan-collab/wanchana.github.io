@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>แบบประเมินความพึงพอใจ </title>
+    <link rel="icon" href="img/logo1.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- 🌈 Variables & Core Styles --- */
+        :root {
+            --glass-bg: rgba(20, 20, 35, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-inner-bg: rgba(255, 255, 255, 0.03);
+            --accent-color: #00f2fe;
+            --secondary-color: #ff0080;
+            --text-main: #ffffff;
+            --body-bg: #0f0c29; 
+            --input-bg: rgba(255, 255, 255, 0.06);
+            --radio-inner: #151525;
+            --opt-bg: #1a1a2e; /* พื้นหลัง Option โหมดมืด */
+        }
+
+        body.light-mode {
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --card-inner-bg: rgba(0, 0, 0, 0.02);
+            --accent-color: #0056b3; 
+            --secondary-color: #d81b60;
+            --text-main: #222222;
+            --body-bg: #e4e9f2;
+            --input-bg: rgba(0, 0, 0, 0.05);
+            --radio-inner: #ffffff;
+            --opt-bg: #ffffff; /* พื้นหลัง Option โหมดสว่าง */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--body-bg); font-family: 'Kanit', sans-serif;
+            color: var(--text-main); min-height: 100vh; overflow-x: hidden;
+            transition: background 0.5s ease; line-height: 1.6;
+        }
+
+        /* --- ✨ Background Effects --- */
+        .video-container { position: fixed; inset: 0; z-index: -3; overflow: hidden; background: var(--body-bg); }
+        .video-container video { min-width: 100%; min-height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); object-fit: cover; opacity: 0.2; mix-blend-mode: screen; }
+        body.light-mode .video-container video { mix-blend-mode: multiply; opacity: 0.1; }
+        .video-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 0%, var(--body-bg) 100%); z-index: -2; }
+        .blob { position: fixed; width: 400px; height: 400px; filter: blur(100px); border-radius: 50%; z-index: -1; opacity: 0.2; animation: move 15s infinite alternate ease-in-out; }
+        .blob-1 { top: -100px; left: -100px; background: var(--accent-color); }
+        .blob-2 { bottom: -100px; right: -100px; background: var(--secondary-color); }
+        @keyframes move { from { transform: translate(0, 0); } to { transform: translate(60px, 60px); } }
+
+        /* --- 🔘 Theme & Admin --- */
+        .theme-toggle, .admin-login-btn {
+            position: fixed; z-index: 1000; top: 20px; background: var(--glass-bg); backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border); color: var(--text-main); cursor: pointer; transition: 0.3s;
+        }
+        .theme-toggle { left: 20px; width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+        .admin-login-btn { right: 20px; height: 45px; padding: 0 15px; border-radius: 25px; display: flex; align-items: center; gap: 8px; text-decoration: none; font-size: 0.9rem; }
+
+        /* --- 📦 Main Container --- */
+        .form-wrapper {
+            position: relative; z-index: 10; max-width: 900px; margin: 80px auto 40px; padding: 30px 20px;
+            background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border);
+            border-radius: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        .header-title { text-align: center; margin-bottom: 30px; }
+        .header-title h1 { color: var(--accent-color); font-size: 1.8rem; margin-bottom: 5px; }
+
+        /* --- 🛠 Select Box FIX (สำหรับโหมดมืด) --- */
+        select.form-select {
+            width: 100%; background: var(--input-bg); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 12px; color: var(--text-main); outline: none; font-family: inherit;
+            appearance: none; -webkit-appearance: none; cursor: pointer;
+        }
+        /* บังคับสีของ Option */
+        select.form-select option {
+            background-color: var(--opt-bg) !important;
+            color: var(--text-main) !important;
+        }
+
+        /* --- 🗂️ Card Structure (Grouping Sub-questions) --- */
+        .section-header { 
+            background: linear-gradient(90deg, var(--accent-color), transparent);
+            color: #fff; padding: 12px 20px; margin: 40px 0 15px -20px;
+            border-radius: 0 50px 50px 0; font-weight: 600; font-size: 1.1rem;
+            display: flex; align-items: center; gap: 10px;
+        }
+        
+        .main-card {
+            background: var(--card-inner-bg); border: 1px solid var(--glass-border);
+            border-radius: 25px; padding: 10px; margin-bottom: 30px;
+        }
+
+        .sub-question-item {
+            padding: 20px; border-bottom: 1px solid var(--glass-border);
+        }
+        .sub-question-item:last-child { border-bottom: none; }
+
+        .q-title { display: flex; gap: 10px; margin-bottom: 15px; }
+        .q-num { color: var(--accent-color); font-weight: 800; font-size: 1.1rem; min-width: 35px; }
+        .q-text { font-size: 1rem; color: var(--text-main); font-weight: 400; }
+
+        /* Rating Row */
+        .rating-row {
+            display: flex; justify-content: space-around; align-items: center;
+            background: rgba(0, 242, 254, 0.05); border-radius: 15px; 
+            padding: 12px 5px; margin-bottom: 15px;
+        }
+        .rating-item { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; }
+        .rating-label { font-weight: 700; font-size: 0.85rem; opacity: 0.8; }
+
+        /* Neon Radio */
+        input[type="radio"] {
+            -webkit-appearance: none; appearance: none; width: 28px; height: 28px; border-radius: 50%;
+            background: var(--input-bg); border: 2px solid var(--glass-border); cursor: pointer; transition: 0.3s;
+        }
+        input[type="radio"]:checked {
+            background: var(--accent-color); border-color: var(--accent-color);
+            box-shadow: inset 0 0 0 5px var(--radio-inner), 0 0 15px var(--accent-color);
+        }
+
+        /* Inputs */
+        .input-style {
+            background: var(--input-bg); border: 1px solid var(--glass-border);
+            border-radius: 10px; padding: 10px 15px; color: var(--text-main);
+            width: 100%; outline: none; transition: 0.3s; font-family: inherit; font-size: 0.9rem;
+        }
+        .input-style:focus { border-color: var(--accent-color); }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--accent-color), #00a8ff); border: none;
+            border-radius: 50px; width: 100%; padding: 18px; color: #fff; font-size: 1.2rem;
+            font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 20px;
+        }
+        .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4); }
+
+        @media (max-width: 600px) {
+            .form-wrapper { padding: 25px 15px; }
+            .sub-question-item { padding: 15px 10px; }
+            .rating-label { font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></div>
+    <a href="admin.html" class="admin-login-btn"><i class="fa-solid fa-user-shield"></i> <span>Admin</span></a>
+
+    <div class="video-container">
+        <video autoplay muted loop playsinline><source src="vdo/vdobg2.mp4" type="video/mp4"></video>
+        <div class="video-overlay"></div>
+    </div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="form-wrapper">
+        <div class="header-title">
+            <img src="logo.png" style="max-width:100px; margin-bottom:10px;" onerror="this.style.display='none'">
+            <h1>แบบประเมินความพึงพอใจการจัดการศึกษา</h1>
+            <p style="opacity: 0.8;">โรงเรียนโยธินนุกูล สังกัดเทศบาลตำบลหนองไผ่ล้อม</p>
+        </div>
+
+        <form id="evaluationForm">
+            <!-- ส่วนที่ 1: ข้อมูลทั่วไป -->
+            <div class="section-header" style="background: none; color: var(--accent-color); margin-left: 0; padding-left: 0;">
+                <i class="fa-solid fa-id-card"></i> ส่วนที่ ๑ ข้อมูลทั่วไป
+            </div>
+            <div class="main-card" style="padding: 20px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                    <div class="form-group">
+                        <p style="margin-bottom:10px;"><strong>๑. สถานะของผู้ตอบ:</strong></p>
+                        <select name="status" class="form-select" required>
+                            <option value="" disabled selected>-- เลือกสถานะ --</option>
+                            <option value="parent">ผู้ปกครอง</option>
+                            <option value="student">นักเรียน</option>
+                            <option value="teacher">ครู/บุคลากร</option>
+                            <option value="committee">คณะกรรมการสถานศึกษา</option>
+                        </select>
+                        <div style="margin-top:12px;">
+                            <input type="text" name="additional_info" class="input-style" placeholder="ระบุเพิ่มเติม (เช่น ชั้นปี/สถานะอื่นๆ)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <p style="margin-bottom:10px;"><strong>๒. เพศ:</strong></p>
+                        <select name="gender" class="form-select" required>
+                            <option value="" disabled selected>-- เลือกเพศ --</option>
+                            <option value="male">ชาย</option>
+                            <option value="female">หญิง</option>
+                            <option value="not_specified">ไม่ระบุ</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="survey-content"></div>
+
+            <script>
+                const sections = [
+                    { t: "1. ด้านการบริหารจัดการสถานศึกษา", icon: "fa-users-gear", q: ["สถานศึกษามีการบริหารงานอย่างเป็นระบบ ชัดเจน และตรวจสอบได้", "สถานศึกษามีการวางแผนและกำหนดเป้าหมายการพัฒนาอย่างเหมาะสม", "สถานศึกษามีการประชาสัมพันธ์ข่าวสาร กิจกรรม และข้อมูลต่าง ๆ อย่างทั่วถึง", "สถานศึกษาเปิดโอกาสให้ผู้ปกครองและชุมชนมีส่วนร่วมในการดำเนินงาน", "สถานศึกษามีการให้บริการผู้มาติดต่อด้วยความสะดวก รวดเร็ว"] },
+                    { t: "2. ด้านการจัดการเรียนรู้", icon: "fa-book-open-reader", q: ["จัดการเรียนการสอนที่ส่งเสริมศักยภาพผู้เรียน", "ส่งเสริมให้ครูใช้สื่อ เทคโนโลยี และนวัตกรรมในการสอน", "จัดกิจกรรมที่เน้นการคิดวิเคราะห์ และการลงมือปฏิบัติจริง", "จัดเนื้อหาและกิจกรรมที่สอดคล้องกับชีวิตประจำวัน", "มีระบบการวัดและประเมินผลที่ยุติธรรม และโปร่งใส"] },
+                    { t: "3. ด้านคุณภาพผู้เรียน", icon: "fa-graduation-cap", q: ["นักเรียนมีผลสัมฤทธิ์ทางการเรียนตามมาตรฐาน", "นักเรียนมีคุณธรรม จริยธรรม และมีระเบียบวินัย", "นักเรียนมีความรับผิดชอบต่อตนเองและสังคม", "นักเรียนมีทักษะการแก้ปัญหาอย่างสร้างสรรค์", "นักเรียนสามารถทำงานร่วมกับผู้อื่นได้ดี"] },
+                    { t: "4. ด้านอาคารสถานที่และสิ่งแวดล้อม", icon: "fa-school", q: ["อาคารเรียนและบริเวณโดยรอบสะอาด ปลอดภัย", "บรรยากาศในโรงเรียนเอื้อต่อการเรียนรู้", "วัสดุ อุปกรณ์ และสื่อการเรียนรู้เพียงพอ", "มีการดูแลรักษาสิ่งแวดล้อมให้ร่มรื่น สวยงาม", "ระบบสาธารณูปโภค (น้ำ/ไฟ/เน็ต) พร้อมใช้งาน"] },
+                    { t: "5. ด้านระบบดูแลช่วยเหลือนักเรียน", icon: "fa-handshake-angle", q: ["มาตรการความปลอดภัยนักเรียนเหมาะสม", "ระบบการให้คำปรึกษาและช่วยเหลือทั่วถึง", "จัดกิจกรรมส่งเสริมสุขภาพและจริยธรรม", "รับฟังความคิดเห็นและความต้องการนักเรียน", "ติดตามช่วยเหลือลูกศิษย์เป็นรายบุคคล"] },
+                    { t: "6. ด้านความสัมพันธ์กับชุมชน", icon: "fa-people-roof", q: ["มีการสื่อสารกับผู้ปกครองสม่ำเสมอ", "เปิดโอกาสให้ชุมชนมีส่วนร่วมในกิจกรรม", "สร้างความสัมพันธ์อันดีระหว่างบ้านและโรงเรียน", "จัดกิจกรรมที่เป็นประโยชน์ต่อชุมชน", "รับฟังข้อเสนอแนะเพื่อนำมาพัฒนา"] }
+                ];
+
+                let container = document.getElementById('survey-content');
+                sections.forEach((s, si) => {
+                    let sectionHtml = `
+                        <div class="section-header">
+                            <i class="fa-solid ${s.icon}"></i> ${s.t}
+                        </div>
+                        <div class="main-card">`;
+                    
+                    s.q.forEach((v, qi) => {
+                        let mainNum = si + 1;
+                        let subNum = qi + 1;
+                        let id = `${mainNum}_${subNum}`;
+                        sectionHtml += `
+                            <div class="sub-question-item">
+                                <div class="q-title">
+                                    <span class="q-num">${mainNum}.${subNum}</span>
+                                    <span class="q-text">${v}</span>
+                                </div>
+                                <div class="rating-row">
+                                    <div class="rating-item"><span class="rating-label">5</span><input type="radio" name="q${id}" value="5" required></div>
+                                    <div class="rating-item"><span class="rating-label">4</span><input type="radio" name="q${id}" value="4"></div>
+                                    <div class="rating-item"><span class="rating-label">3</span><input type="radio" name="q${id}" value="3"></div>
+                                    <div class="rating-item"><span class="rating-label">2</span><input type="radio" name="q${id}" value="2"></div>
+                                    <div class="rating-item"><span class="rating-label">1</span><input type="radio" name="q${id}" value="1"></div>
+                                </div>
+                                <input type="text" name="c${id}" class="input-style sub-comment" placeholder="เหตุผล/ข้อเสนอแนะสำหรับข้อนี้...">
+                            </div>`;
+                    });
+                    sectionHtml += `</div>`;
+                    container.innerHTML += sectionHtml;
+                });
+            </script>
+
+            <div class="section-header" style="background: none; color: var(--accent-color); margin-left: 0; padding-left: 0;">
+                <i class="fa-solid fa-comments"></i> ส่วนที่ ๓ ข้อเสนอแนะในภาพรวม
+            </div>
+            <div class="main-card" style="padding: 15px;">
+                <textarea name="suggestions" rows="4" class="input-style" placeholder="ระบุข้อเสนอแนะเพิ่มเติมในภาพรวมที่นี่..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit"><i class="fa-solid fa-paper-plane"></i> ส่งแบบประเมินความพึงพอใจ</button>
+        </form>
+    </div>
+
+    <script>
+        // --- 🌓 Theme Logic ---
+        const themeBtn = document.getElementById('theme-toggle');
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            themeBtn.innerHTML = isLight ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+        if(localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>'; }
+
+        // --- 🚀 Validation & Submit ---
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyi68ymvz6_3TDgRJ1enuwT0daM1YdbK2lDw0oGo1xE7TWYxq_ZLAcV0YO53YCzPix0/exec';
+        const form = document.getElementById('evaluationForm');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            
+            let isValid = true;
+            let focusEl = null;
+            const radios = form.querySelectorAll('input[type="radio"]:checked');
+
+            radios.forEach(r => {
+                if(r.value === "1" || r.value === "2") {
+                    const item = r.closest('.sub-question-item');
+                    const comment = item.querySelector('.sub-comment');
+                    if(comment && comment.value.trim() === "") {
+                        isValid = false;
+                        comment.style.border = "2px solid var(--secondary-color)";
+                        if(!focusEl) focusEl = comment;
+                    } else { comment.style.border = ""; }
+                }
+            });
+
+            if(!isValid) {
+                alert("กรุณาระบุเหตุผลในข้อที่ท่านประเมิน 'น้อย' หรือ 'น้อยที่สุด' ครับ");
+                focusEl.focus(); focusEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            const btn = document.querySelector('.btn-submit');
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังส่งข้อมูล...';
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(res => {
+                    alert('บันทึกเรียบร้อย ขอบคุณครับ!');
+                    form.reset(); location.reload();
+                })
+                .catch(err => {
+                    alert('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+                    btn.disabled = false; btn.innerHTML = 'ส่งแบบประเมิน';
+                });
+        });
+    </script>
+</body>
+</html>
